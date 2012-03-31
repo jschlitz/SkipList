@@ -7,6 +7,7 @@ namespace SkipList
 {
   class Program
   {
+   //git seems to be crap.   
     static void Main(string[] args)
     {
     }
