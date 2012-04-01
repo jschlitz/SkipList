@@ -8,7 +8,7 @@ namespace SkipList
 {
   /// <summary>
   /// Node from a skip list. Has a set height.
-  /// <remarks>I am not particularly fond of git</remarks>
+  /// <remarks>I am not particularly fond of git. Or at least the damned passphrase thing.</remarks>
   /// </summary>
   public class SkipNode<T>
   {
