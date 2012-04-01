@@ -6,9 +6,9 @@ using System.Text;
 
 namespace SkipList
 {
-   //I hate git.
   /// <summary>
   /// Node from a skip list. Has a set height.
+  /// <remarks>I am not particularly fond of git</remarks>
   /// </summary>
   public class SkipNode<T>
   {
