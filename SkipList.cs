@@ -119,7 +119,7 @@ namespace SkipList
     /// <summary>
     /// Make sure that it is monotonicly increasing at all nodeheights.
     /// </summary>
-    protected virtual bool CheckIngegrity()
+    protected virtual bool CheckIntegrity()
     {
       var previousQueue = new Queue<SkipNode<T>>();
       for (int i = _Root.Height-1; i >= 0; i--)

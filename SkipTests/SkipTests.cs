@@ -36,9 +36,9 @@ namespace SkipTests
         return GetHeight();
       }
 
-      public bool CheckInegrityAccess()
+      public bool CheckIntegrityAccess()
       {
-        return CheckIngegrity();
+        return CheckIntegrity();
       }
     }
 
@@ -113,7 +113,7 @@ namespace SkipTests
       foreach (int targetVal in target)
         Assert.AreEqual(targetVal, verf[index++]);
 
-      target.CheckInegrityAccess();
+      target.CheckIntegrityAccess();
     }
   }
 }
