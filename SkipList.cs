@@ -121,6 +121,39 @@ namespace SkipList
     /// </summary>
     protected virtual bool CheckIngegrity()
     {
+      var previousQueue = new Queue<SkipNode<T>>();
+      for (int i = _Root.Height-1; i >= 0; i--)
+      {
+        //currentQueue will get all of the nodes (in order) at level i
+        //previousQueu will have all of the nodes (in order) at level i+1. It might be empty.
+        var currentQueue = new Queue<SkipNode<T>>();
+        var currentNode = _Root[i];
+        while (currentNode != null)
+        {
+          currentQueue.Enqueue(currentNode);
+          
+          //the head of previousQueue may or may not be this item. If so, dequeue it.
+          if (previousQueue.Count > 0 && 
+            previousQueue.Peek() == currentNode)
+            previousQueue.Dequeue();
+
+          //Also, we should be always increasing (or at least not backtracking.
+          if (currentNode[i] != null &&
+            this.Comparer.Compare(currentNode.Value, currentNode[i].Value) > 0)
+            throw new Exception(string.Format("{0} is not less than or equal to {1}. At level {2}", 
+              currentNode.Value, currentNode[i].Value, i));
+
+          currentNode = currentNode[i];
+        }
+
+        //but by the time we exhaust nodes at level i, we've emptied previousQueue
+        if (previousQueue.Count > 0) 
+          throw new Exception(previousQueue.Count + " items remain at level " + i);
+
+        previousQueue = currentQueue;
+      }
+
+      return true;
     }
 
     /// <summary>

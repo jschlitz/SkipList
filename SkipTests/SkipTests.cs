@@ -16,6 +16,7 @@ namespace SkipTests
     class TestSkipList<T>:SkipList<T>
     {
 
+       //but will get see changes in subfolders?
     #region constructors
     public TestSkipList(int seed, IComparer<T> c):base(seed, c)
     {}
@@ -33,6 +34,11 @@ namespace SkipTests
       protected int GetHeightAccess()
       {
         return GetHeight();
+      }
+
+      public bool CheckInegrityAccess()
+      {
+        return CheckIngegrity();
       }
     }
 
@@ -106,6 +112,8 @@ namespace SkipTests
       int index = 0;
       foreach (int targetVal in target)
         Assert.AreEqual(targetVal, verf[index++]);
+
+      target.CheckInegrityAccess();
     }
   }
 }
