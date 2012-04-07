@@ -64,6 +64,14 @@ namespace SkipList
     {
       return "H:" + Height + "V:" + Value;
     }
+
+    /// <summary>
+    /// Get the next node
+    /// </summary>
+    public SkipNode<T> Next()
+    {
+      return this[0];
+    }
   }
 
   /// <summary>
@@ -165,9 +173,9 @@ namespace SkipList
     {
       var result = new StringBuilder();
       var current = _Root;
-      while (current[0] != null)
+      while (current.Next() != null)
       {
-        current = current[0];
+        current = current.Next();
         result.Append(current.ToString());
         result.Append(", ");
       }
@@ -180,10 +188,20 @@ namespace SkipList
 
     #region ICollection<T> Members
 
+
     /// <summary>
     /// Add an item to the list. Log(n) operation.
     /// </summary>
     public void Add(T item)
+    { 
+      SkipNode<T> dummy;
+      Add(item, out dummy);
+    }
+
+    /// <summary>
+    /// Add an item to the list. Log(n) operation.
+    /// </summary>
+    public void  Add(T item, out SkipNode<T> itemNode)
     {
       //How high is this node?
       var height = GetHeight();
@@ -201,7 +219,7 @@ namespace SkipList
       var predecessors = GetPredecessors(item);
 
       //rethread the references
-      var itemNode = new SkipNode<T>(height, item);
+      itemNode = new SkipNode<T>(height, item);
       for (int i = 0; i < height; i++)
       {
         itemNode[i] = predecessors[i][i];
@@ -218,7 +236,7 @@ namespace SkipList
       var predecessors = GetPredecessors(item);
       if (predecessors[0] == null) return false;
 
-      var deleteMe = predecessors[0][0];
+      var deleteMe = predecessors[0].Next();
       if (deleteMe == null) return false;
 
       //did we not find it?
@@ -307,12 +325,12 @@ namespace SkipList
     /// </summary>
     public void CopyTo(T[] array, int arrayIndex)
     {
-      var current = _Root[0];
+      var current = _Root.Next();
       int i = arrayIndex;
       while (current != null)
       {
         array[i++] = current.Value;
-        current = current[0];
+        current = current.Next();
       }
     }
 
@@ -364,9 +382,9 @@ namespace SkipList
       /// <exception cref="T:System.InvalidOperationException">The collection was modified after the enumerator was created. </exception><filterpriority>2</filterpriority>
       public bool MoveNext()
       {
-        bool result = (_Current[0] != null);
+        bool result = (_Current.Next() != null);
         if (result)
-          _Current = _Current[0];
+          _Current = _Current.Next();
         return result;
       }
 
