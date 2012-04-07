@@ -72,6 +72,11 @@ namespace SkipList
     {
       return this[0];
     }
+
+    /// <summary>
+    /// Previous node in sequence.
+    /// </summary>
+    public SkipNode<T> Previous { get; set; }
   }
 
   /// <summary>
@@ -133,7 +138,7 @@ namespace SkipList
       for (int i = _Root.Height-1; i >= 0; i--)
       {
         //currentQueue will get all of the nodes (in order) at level i
-        //previousQueu will have all of the nodes (in order) at level i+1. It might be empty.
+        //previousQueue will have all of the nodes (in order) at level i+1. It might be empty.
         var currentQueue = new Queue<SkipNode<T>>();
         var currentNode = _Root[i];
         while (currentNode != null)
@@ -161,7 +166,33 @@ namespace SkipList
         previousQueue = currentQueue;
       }
 
+      //check that previous-ness holds
+      CheckBackwards();
+
       return true;
+    }
+
+
+    private void CheckBackwards()
+    {
+      var nodeStack = new Stack<SkipNode<T>>(Count);
+      var currentNode = _Root;
+      do
+      {
+        nodeStack.Push(currentNode);
+        currentNode = currentNode.Next();
+      } while (currentNode != null);
+
+      currentNode = nodeStack.Pop();//we'll always have 1, due to the root.
+      while (nodeStack.Count > 0)
+      {
+        var tmp = nodeStack.Pop();
+        if (tmp != currentNode.Previous)
+          throw new Exception(string.Format("Walking the node backwards is broken. {0} != {1}",
+              tmp.ToString(), currentNode.Previous.ToString()));
+
+        currentNode = tmp;
+      }
     }
 
     /// <summary>
@@ -213,6 +244,8 @@ namespace SkipList
         for (int i = 0; i < _Root.Height; i++)
           newRoot[i] = _Root[i];
         _Root = newRoot;
+        if (_Root.Next() != null)
+          _Root.Next().Previous = _Root;
       }
 
       //find the one that it goes just after
@@ -225,6 +258,11 @@ namespace SkipList
         itemNode[i] = predecessors[i][i];
         predecessors[i][i] = itemNode;
       }
+
+      //fix Previouses
+      if(itemNode.Next() != null)
+        itemNode.Next().Previous = itemNode;
+      itemNode.Previous = predecessors[0];
 
       //And now we're bigger.
       Count++;
@@ -245,6 +283,10 @@ namespace SkipList
       //rethread the references. the trick is that we don't care about predecessors at a height > the deleted node's
       for (int i = 0; i < deleteMe.Height; i++)
         predecessors[i][i] = deleteMe[i];
+
+      //fix Previouses
+      if(deleteMe.Next() != null)
+        deleteMe.Next().Previous = deleteMe.Previous;
       
       //And now we're smaller.
       Count--;
