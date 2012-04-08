@@ -217,6 +217,17 @@ namespace SkipList
     {
     }
 
+    //When I extend this for Voroni, I'll have to more explicitly control 
+    //insertions and deletions. It depends on finding node triplets that
+    //are in the right place. I can't just rely on a simple comparer to keep the
+    //right order.
+    ///// <summary>
+    ///// Find the node for which c.Compare() returns 0.
+    ///// </summary>
+    //public SkipNode<T> FindNode(IComparer<T> c)
+    //{
+    //}
+
     #region ICollection<T> Members
 
 
